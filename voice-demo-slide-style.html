@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Example Audio Stimuli</title>
+  <style>
+    :root {
+      --teal: #00635d;
+      --teal-dark: #004f4a;
+      --text: #23343a;
+      --muted: #6b7a80;
+      --border: #d7e2e4;
+      --soft: #f4f8f8;
+      --button: #e9f4f3;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: #ffffff;
+      color: var(--text);
+      font-family: "Aptos", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+      line-height: 1.45;
+    }
+
+    .slide {
+      width: 100vw;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      background: #ffffff;
+    }
+
+    .header {
+      background: var(--teal);
+      color: #ffffff;
+      padding: 1.05rem 1.55rem 0.95rem;
+      font-size: clamp(1.35rem, 2.1vw, 2rem);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    .content {
+      flex: 1;
+      padding: 3.2rem 6vw 2.5rem;
+      max-width: 1180px;
+      width: 100%;
+      margin: 0 auto;
+    }
+
+    .caption {
+      text-align: center;
+      font-style: italic;
+      font-size: clamp(1.05rem, 1.4vw, 1.35rem);
+      margin-bottom: 2.2rem;
+      color: var(--text);
+    }
+
+    .stimulus {
+      color: var(--teal-dark);
+      font-style: normal;
+      font-weight: 600;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(280px, 1fr));
+      gap: 2rem;
+      align-items: stretch;
+    }
+
+    .card {
+      border: 1.6px solid var(--border);
+      border-radius: 18px;
+      background: var(--soft);
+      padding: 1.45rem 1.55rem 1.65rem;
+      box-shadow: 0 4px 14px rgba(0, 60, 55, 0.06);
+    }
+
+    .card-title {
+      color: var(--teal-dark);
+      font-size: clamp(1.25rem, 1.7vw, 1.6rem);
+      font-weight: 700;
+      margin: 0 0 0.35rem;
+    }
+
+    .card-subtitle {
+      color: var(--muted);
+      font-size: clamp(0.95rem, 1.1vw, 1.1rem);
+      margin: 0 0 1.25rem;
+    }
+
+    audio {
+      width: 100%;
+      height: 42px;
+      accent-color: var(--teal);
+    }
+
+    .open-link {
+      display: inline-block;
+      margin-top: 1.1rem;
+      padding: 0.55rem 0.9rem;
+      border: 1.5px solid var(--teal);
+      border-radius: 999px;
+      color: var(--teal-dark);
+      background: var(--button);
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.98rem;
+    }
+
+    .open-link:hover,
+    .open-link:focus {
+      background: #d8eeec;
+      outline: none;
+    }
+
+    .note {
+      margin-top: 2.2rem;
+      padding-top: 1.25rem;
+      border-top: 1px solid var(--border);
+      color: var(--muted);
+      font-size: clamp(0.9rem, 1vw, 1rem);
+      text-align: center;
+    }
+
+    .footer {
+      padding: 0.8rem 1.2rem 1rem;
+      display: flex;
+      justify-content: flex-end;
+      color: var(--text);
+      font-size: 0.95rem;
+    }
+
+    @media (max-width: 760px) {
+      .content {
+        padding: 2rem 1.2rem;
+      }
+
+      .grid {
+        grid-template-columns: 1fr;
+      }
+
+      .header {
+        padding-left: 1.2rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="slide">
+    <header class="header">Example Audio Stimuli</header>
+
+    <section class="content" aria-label="Example audio stimuli">
+      <p class="caption">
+        Example audio stimulus:
+        <span class="stimulus">“A, you receive 30 tokens, and the other receives 80.”</span>
+      </p>
+
+      <div class="grid">
+        <article class="card">
+          <h2 class="card-title">Female AI voice</h2>
+          <p class="card-subtitle">Treatment voice example</p>
+          <audio controls preload="auto">
+            <source src="Female_Example_OptA_cleaned.mp3" type="audio/mpeg" />
+            Your browser does not support the audio element.
+          </audio>
+          <a class="open-link" href="Female_Example_OptA_cleaned.mp3" target="_blank" rel="noopener">Open audio file</a>
+        </article>
+
+        <article class="card">
+          <h2 class="card-title">Male AI voice</h2>
+          <p class="card-subtitle">Treatment voice example</p>
+          <audio controls preload="auto">
+            <source src="Male_Example_OptA_cleaned.mp3" type="audio/mpeg" />
+            Your browser does not support the audio element.
+          </audio>
+          <a class="open-link" href="Male_Example_OptA_cleaned.mp3" target="_blank" rel="noopener">Open audio file</a>
+        </article>
+      </div>
+
+      <p class="note">
+        Place this HTML file in the same folder as the two MP3 files, then upload the folder to a public web host.
+      </p>
+    </section>
+
+    <footer class="footer">Audio demo</footer>
+  </main>
+</body>
+</html>
