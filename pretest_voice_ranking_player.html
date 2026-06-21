@@ -1,0 +1,1086 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Voice Pretest Audio Ranking</title>
+
+  <style>
+    :root {
+      --teal: #00635d;
+      --teal-dark: #004f4a;
+      --teal-soft: #eff8f7;
+      --text: #23343a;
+      --muted: #65757a;
+      --border: #d7e2e4;
+      --female: #c73b6f;
+      --male: #2b5fb8;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: #ffffff;
+      color: var(--text);
+      font-family: Arial, Helvetica, sans-serif;
+      line-height: 1.45;
+    }
+
+    .header {
+      background: var(--teal);
+      color: #ffffff;
+      padding: 1.05rem 1.55rem 0.95rem;
+      font-size: clamp(1.35rem, 2.1vw, 2rem);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    .content {
+      max-width: 1240px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 2.4rem 4vw 2.6rem;
+    }
+
+    .caption {
+      margin: 0 0 1.65rem;
+      color: var(--text);
+      font-size: clamp(1rem, 1.2vw, 1.18rem);
+      text-align: center;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(320px, 1fr));
+      gap: 1.5rem;
+      align-items: start;
+    }
+
+    .panel {
+      border: 1.5px solid var(--border);
+      border-radius: 14px;
+      background: #ffffff;
+      overflow: hidden;
+      box-shadow: 0 4px 14px rgba(0, 60, 55, 0.055);
+    }
+
+    .panel-title {
+      background: var(--teal-soft);
+      border-bottom: 1px solid var(--border);
+      padding: 0.85rem 1rem;
+      color: var(--teal-dark);
+      font-size: clamp(1.05rem, 1.4vw, 1.35rem);
+      font-weight: 700;
+    }
+
+    .panel-subtitle {
+      display: block;
+      margin-top: 0.15rem;
+      color: var(--muted);
+      font-size: 0.82rem;
+      font-weight: 400;
+    }
+
+    .voice-list {
+      padding: 0.45rem 0.8rem 0.85rem;
+    }
+
+    .voice-row {
+      display: grid;
+      grid-template-columns: 2.2rem 1fr;
+      gap: 0.7rem;
+      padding: 0.8rem 0.15rem;
+      border-bottom: 1px solid #edf2f3;
+    }
+
+    .voice-row:last-child {
+      border-bottom: none;
+    }
+
+    .rank {
+      width: 2rem;
+      height: 2rem;
+      border-radius: 999px;
+      background: var(--teal);
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.9rem;
+      font-weight: 700;
+      margin-top: 0.05rem;
+    }
+
+    .voice-main {
+      min-width: 0;
+    }
+
+    .voice-head {
+      display: flex;
+      align-items: baseline;
+      gap: 0.55rem;
+      flex-wrap: wrap;
+      margin-bottom: 0.2rem;
+    }
+
+    .voice-name {
+      color: var(--teal-dark);
+      font-size: 1.05rem;
+      font-weight: 700;
+    }
+
+    .tag {
+      border-radius: 999px;
+      padding: 0.1rem 0.55rem;
+      color: #ffffff;
+      font-size: 0.72rem;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .tag.female {
+      background: var(--female);
+    }
+
+    .tag.male {
+      background: var(--male);
+    }
+
+    .metrics {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.45rem 0.8rem;
+      color: var(--muted);
+      font-size: 0.78rem;
+      margin-bottom: 0.45rem;
+    }
+
+    audio {
+      display: block;
+      width: 100%;
+      max-width: 460px;
+      height: 36px;
+      accent-color: var(--teal);
+    }
+
+    .open-link {
+      display: inline-block;
+      margin-top: 0.35rem;
+      color: var(--teal-dark);
+      font-size: 0.78rem;
+      text-decoration: none;
+      border-bottom: 1px solid transparent;
+    }
+
+    .open-link:hover,
+    .open-link:focus {
+      border-bottom-color: var(--teal-dark);
+      outline: none;
+    }
+
+    .note {
+      margin: 1.6rem 0 0;
+      color: var(--muted);
+      font-size: 0.9rem;
+      text-align: center;
+    }
+
+    @media (max-width: 850px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+
+      .content {
+        padding: 1.6rem 1rem 2.2rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header class="header">Voice Evaluation Pretest: Audio Ranking</header>
+
+  <main class="content">
+    <p class="caption">
+      Rankings are based on the pretest selection score. Click each player to hear the corresponding AI voice.
+    </p>
+
+    <section class="grid">
+      <div class="panel">
+        <div class="panel-title">
+          Male participants’ ranking
+          <span class="panel-subtitle">Voice evaluations from male raters</span>
+        </div>
+        <div class="voice-list">
+
+          <article class="voice-row">
+            <div class="rank">1</div>
+            <div class="voice-main">
+              <div class="voice-head">
+                <span class="voice-name">Kristen</span>
+                <span class="tag female">Female voice</span>
+              </div>
+              <div class="metrics">
+                <span>Attractiveness 4.91</span>
+                <span>Human-likeness 4.86</span>
+                <span>Score 3.70</span>
+              </div>
+              <audio controls preload="metadata" src="Female_Kristen.mp3">
+                Your browser does not support the audio element.
+              </audio>
+              <a class="open-link" href="Female_Kristen.mp3" target="_blank" rel="noopener">Open audio file</a>
+            </div>
+          </article>
+
+          <article class="voice-row">
+            <div class="rank">2</div>
+            <div class="voice-main">
+              <div class="voice-head">
+                <span class="voice-name">Olivia</span>
+                <span class="tag female">Female voice</span>
+              </div>
+              <div class="metrics">
+                <span>Attractiveness 4.69</span>
+                <span>Human-likeness 4.86</span>
+                <span>Score 3.69</span>
+              </div>
+              <audio controls preload="metadata" src="Female_Olivia.mp3">
+                Your browser does not support the audio element.
+              </audio>
+              <a class="open-link" href="Female_Olivia.mp3" target="_blank" rel="noopener">Open audio file</a>
+            </div>
+          </article>
+
+          <article class="voice-row">
+            <div class="rank">3</div>
+            <div class="voice-main">
+              <div class="voice-head">
+                <span class="voice-name">Ivanna</span>
+                <span class="tag female">Female voice</span>
+              </div>
+              <div class="metrics">
+                <span>Attractiveness 5.14</span>
+                <span>Human-likeness 4.11</span>
+                <span>Score 2.40</span>
+              </div>
+              <audio controls preload="metadata" src="Female_Ivanna.mp3">
+                Your browser does not support the audio element.
+              </audio>
+              <a class="open-link" href="Female_Ivanna.mp3" target="_blank" rel="noopener">Open audio file</a>
+            </div>
+          </article>
+
+          <article class="voice-row">
+            <div class="rank">4</div>
+            <div class="voice-main">
+              <div class="voice-head">
+                <span class="voice-name">Serein</span>
+                <span class="tag female">Female voice</span>
+              </div>
+              <div class="metrics">
+                <span>Attractiveness 4.50</span>
+                <span>Human-likeness 4.31</span>
+                <span>Score 1.71</span>
+              </div>
+              <audio controls preload="metadata" src="Female_Serein.mp3">
+                Your browser does not support the audio element.
+              </audio>
+              <a class="open-link" href="Female_Serein.mp3" target="_blank" rel="noopener">Open audio file</a>
+            </div>
+          </article>
+
+          <article class="voice-row">
+            <div class="rank">5</div>
+            <div class="voice-main">
+              <div class="voice-head">
+                <span class="voice-name">Hallie</span>
+                <span class="tag female">Female voice</span>
+              </div>
+              <div class="metrics">
+                <span>Attractiveness 5.00</span>
+                <span>Human-likeness 4.11</span>
+                <span>Score 1.57</span>
+              </div>
+              <audio controls preload="metadata" src="Female_Hallie.mp3">
+                Your browser does not support the audio element.
+              </audio>
+              <a class="open-link" href="Female_Hallie.mp3" target="_blank" rel="noopener">Open audio file</a>
+            </div>
+          </article>
+
+          <article class="voice-row">
+            <div class="rank">6</div>
+            <div class="voice-main">
+              <div class="voice-head">
+                <span class="voice-name">Lucas</span>
+                <span class="tag male">Male voice</span>
+              </div>
+              <div class="metrics">
+                <span>Attractiveness 4.08</span>
+                <span>Human-likeness 4.69</span>
+                <span>Score 1.18</span>
+              </div>
+              <audio controls preload="metadata" src="Male_Lucas.mp3">
+                Your browser does not support the audio element.
+              </audio>
+              <a class="open-link" href="Male_Lucas.mp3" target="_blank" rel="noopener">Open audio file</a>
+            </div>
+          </article>
+
+          <article class="voice-row">
+            <div class="rank">7</div>
+            <div class="voice-main">
+              <div class="voice-head">
+                <span class="voice-name">Hailey</span>
+                <span class="tag female">Female voice</span>
+              </div>
+              <div class="metrics">
+                <span>Attractiveness 4.85</span>
+                <span>Human-likeness 5.00</span>
+                <span>Score 1.14</span>
+              </div>
+              <audio controls preload="metadata" src="Female_Hailey.mp3">
+                Your browser does not support the audio element.
+              </audio>
+              <a class="open-link" href="Female_Hailey.mp3" target="_blank" rel="noopener">Open audio file</a>
+            </div>
+          </article>
+
+          <article class="voice-row">
+            <div class="rank">8</div>
+            <div class="voice-main">
+              <div class="voice-head">
+                <span class="voice-name">Anne</span>
+                <span class="tag female">Female voice</span>
+              </div>
+              <div class="metrics">
+                <span>Attractiveness 4.81</span>
+                <span>Human-likeness 4.11</span>
+                <span>Score 0.81</span>
+              </div>
+              <audio controls preload="metadata" src="Female_Anne.mp3">
+                Your browser does not support the audio element.
+              </audio>
+              <a class="open-link" href="Female_Anne.mp3" target="_blank" rel="noopener">Open audio file</a>
+            </div>
+          </article>
+
+          <article class="voice-row">
+            <div class="rank">9</div>
+            <div class="voice-main">
+              <div class="voice-head">
+                <span class="voice-name">Tyron</span>
+                <span class="tag male">Male voice</span>
+              </div>
+              <div class="metrics">
+                <span>Attractiveness 3.83</span>
+                <span>Human-likeness 4.49</span>
+                <span>Score 0.78</span>
+              </div>
+              <audio controls preload="metadata" src="Male_Tyron.mp3">
+                Your browser does not support the audio element.
+              </audio>
+              <a class="open-link" href="Male_Tyron.mp3" target="_blank" rel="noopener">Open audio file</a>
+            </div>
+          </article>
+
+          <article class="voice-row">
+            <div class="rank">10</div>
+            <div class="voice-main">
+              <div class="voice-head">
+                <span class="voice-name">Kara</span>
+                <span class="tag female">Female voice</span>
+              </div>
+              <div class="metrics">
+                <span>Attractiveness 4.35</span>
+                <span>Human-likeness 4.35</span>
+                <span>Score 0.63</span>
+              </div>
+              <audio controls preload="metadata" src="Female_Kara.mp3">
+                Your browser does not support the audio element.
+              </audio>
+              <a class="open-link" href="Female_Kara.mp3" target="_blank" rel="noopener">Open audio file</a>
+            </div>
+          </article>
+
+          <article class="voice-row">
+            <div class="rank">11</div>
+            <div class="voice-main">
+              <div class="voice-head">
+                <span class="voice-name">Eliel</span>
+                <span class="tag male">Male voice</span>
+              </div>
+              <div class="metrics">
+                <span>Attractiveness 3.79</span>
+                <span>Human-likeness 4.59</span>
+                <span>Score 0.33</span>
+              </div>
+              <audio controls preload="metadata" src="Male_Eliel.mp3">
+                Your browser does not support the audio element.
+              </audio>
+              <a class="open-link" href="Male_Eliel.mp3" target="_blank" rel="noopener">Open audio file</a>
+            </div>
+          </article>
+
+          <article class="voice-row">
+            <div class="rank">12</div>
+            <div class="voice-main">
+              <div class="voice-head">
+                <span class="voice-name">Jenn</span>
+                <span class="tag female">Female voice</span>
+              </div>
+              <div class="metrics">
+                <span>Attractiveness 4.97</span>
+                <span>Human-likeness 3.16</span>
+                <span>Score -0.05</span>
+              </div>
+              <audio controls preload="metadata" src="Female_Jenn.mp3">
+                Your browser does not support the audio element.
+              </audio>
+              <a class="open-link" href="Female_Jenn.mp3" target="_blank" rel="noopener">Open audio file</a>
+            </div>
+          </article>
+
+          <article class="voice-row">
+            <div class="rank">13</div>
+            <div class="voice-main">
+              <div class="voice-head">
+                <span class="voice-name">Cavill</span>
+                <span class="tag male">Male voice</span>
+              </div>
+              <div class="metrics">
+                <span>Attractiveness 4.33</span>
+                <span>Human-likeness 4.07</span>
+                <span>Score -0.06</span>
+              </div>
+              <audio controls preload="metadata" src="Male_Cavill.mp3">
+                Your browser does not support the audio element.
+              </audio>
+              <a class="open-link" href="Male_Cavill.mp3" target="_blank" rel="noopener">Open audio file</a>
+            </div>
+          </article>
+
+          <article class="voice-row">
+            <div class="rank">14</div>
+            <div class="voice-main">
+              <div class="voice-head">
+                <span class="voice-name">Nate</span>
+                <span class="tag male">Male voice</span>
+              </div>
+              <div class="metrics">
+                <span>Attractiveness 4.16</span>
+                <span>Human-likeness 3.69</span>
+                <span>Score -0.21</span>
+              </div>
+              <audio controls preload="metadata" src="Male_Nate.mp3">
+                Your browser does not support the audio element.
+              </audio>
+              <a class="open-link" href="Male_Nate.mp3" target="_blank" rel="noopener">Open audio file</a>
+            </div>
+          </article>
+
+          <article class="voice-row">
+            <div class="rank">15</div>
+            <div class="voice-main">
+              <div class="voice-head">
+                <span class="voice-name">Elias</span>
+                <span class="tag male">Male voice</span>
+              </div>
+              <div class="metrics">
+                <span>Attractiveness 3.22</span>
+                <span>Human-likeness 4.78</span>
+                <span>Score -0.32</span>
+              </div>
+              <audio controls preload="metadata" src="Male_Elias.mp3">
+                Your browser does not support the audio element.
+              </audio>
+              <a class="open-link" href="Male_Elias.mp3" target="_blank" rel="noopener">Open audio file</a>
+            </div>
+          </article>
+
+          <article class="voice-row">
+            <div class="rank">16</div>
+            <div class="voice-main">
+              <div class="voice-head">
+                <span class="voice-name">Attank</span>
+                <span class="tag male">Male voice</span>
+              </div>
+              <div class="metrics">
+                <span>Attractiveness 3.72</span>
+                <span>Human-likeness 4.88</span>
+                <span>Score -1.02</span>
+              </div>
+              <audio controls preload="metadata" src="Male_Attank.mp3">
+                Your browser does not support the audio element.
+              </audio>
+              <a class="open-link" href="Male_Attank.mp3" target="_blank" rel="noopener">Open audio file</a>
+            </div>
+          </article>
+
+          <article class="voice-row">
+            <div class="rank">17</div>
+            <div class="voice-main">
+              <div class="voice-head">
+                <span class="voice-name">Jon</span>
+                <span class="tag male">Male voice</span>
+              </div>
+              <div class="metrics">
+                <span>Attractiveness 4.56</span>
+                <span>Human-likeness 3.11</span>
+                <span>Score -1.19</span>
+              </div>
+              <audio controls preload="metadata" src="Male_Jon.mp3">
+                Your browser does not support the audio element.
+              </audio>
+              <a class="open-link" href="Male_Jon.mp3" target="_blank" rel="noopener">Open audio file</a>
+            </div>
+          </article>
+
+          <article class="voice-row">
+            <div class="rank">18</div>
+            <div class="voice-main">
+              <div class="voice-head">
+                <span class="voice-name">Mark</span>
+                <span class="tag male">Male voice</span>
+              </div>
+              <div class="metrics">
+                <span>Attractiveness 4.33</span>
+                <span>Human-likeness 3.33</span>
+                <span>Score -1.84</span>
+              </div>
+              <audio controls preload="metadata" src="Male_Mark.mp3">
+                Your browser does not support the audio element.
+              </audio>
+              <a class="open-link" href="Male_Mark.mp3" target="_blank" rel="noopener">Open audio file</a>
+            </div>
+          </article>
+
+          <article class="voice-row">
+            <div class="rank">19</div>
+            <div class="voice-main">
+              <div class="voice-head">
+                <span class="voice-name">James</span>
+                <span class="tag male">Male voice</span>
+              </div>
+              <div class="metrics">
+                <span>Attractiveness 3.70</span>
+                <span>Human-likeness 3.90</span>
+                <span>Score -2.51</span>
+              </div>
+              <audio controls preload="metadata" src="Male_James.mp3">
+                Your browser does not support the audio element.
+              </audio>
+              <a class="open-link" href="Male_James.mp3" target="_blank" rel="noopener">Open audio file</a>
+            </div>
+          </article>
+
+          <article class="voice-row">
+            <div class="rank">20</div>
+            <div class="voice-main">
+              <div class="voice-head">
+                <span class="voice-name">Algenib(GCP)</span>
+                <span class="tag male">Male voice</span>
+              </div>
+              <div class="metrics">
+                <span>Attractiveness 3.69</span>
+                <span>Human-likeness 2.56</span>
+                <span>Score -3.41</span>
+              </div>
+              <audio controls preload="metadata" src="Male_Algenib(GCP).mp3">
+                Your browser does not support the audio element.
+              </audio>
+              <a class="open-link" href="Male_Algenib(GCP).mp3" target="_blank" rel="noopener">Open audio file</a>
+            </div>
+          </article>
+
+          <article class="voice-row">
+            <div class="rank">21</div>
+            <div class="voice-main">
+              <div class="voice-head">
+                <span class="voice-name">Laomedeia(GCP)</span>
+                <span class="tag female">Female voice</span>
+              </div>
+              <div class="metrics">
+                <span>Attractiveness 3.77</span>
+                <span>Human-likeness 2.32</span>
+                <span>Score -3.44</span>
+              </div>
+              <audio controls preload="metadata" src="Female_Laomedeia(GCP).mp3">
+                Your browser does not support the audio element.
+              </audio>
+              <a class="open-link" href="Female_Laomedeia(GCP).mp3" target="_blank" rel="noopener">Open audio file</a>
+            </div>
+          </article>
+
+          <article class="voice-row">
+            <div class="rank">22</div>
+            <div class="voice-main">
+              <div class="voice-head">
+                <span class="voice-name">Eve</span>
+                <span class="tag female">Female voice</span>
+              </div>
+              <div class="metrics">
+                <span>Attractiveness 3.42</span>
+                <span>Human-likeness 3.70</span>
+                <span>Score -3.90</span>
+              </div>
+              <audio controls preload="metadata" src="Female_Eve.mp3">
+                Your browser does not support the audio element.
+              </audio>
+              <a class="open-link" href="Female_Eve.mp3" target="_blank" rel="noopener">Open audio file</a>
+            </div>
+          </article>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-title">
+          Female participants’ ranking
+          <span class="panel-subtitle">Voice evaluations from female raters</span>
+        </div>
+        <div class="voice-list">
+
+          <article class="voice-row">
+            <div class="rank">1</div>
+            <div class="voice-main">
+              <div class="voice-head">
+                <span class="voice-name">Attank</span>
+                <span class="tag male">Male voice</span>
+              </div>
+              <div class="metrics">
+                <span>Attractiveness 4.68</span>
+                <span>Human-likeness 5.14</span>
+                <span>Score 3.63</span>
+              </div>
+              <audio controls preload="metadata" src="Male_Attank.mp3">
+                Your browser does not support the audio element.
+              </audio>
+              <a class="open-link" href="Male_Attank.mp3" target="_blank" rel="noopener">Open audio file</a>
+            </div>
+          </article>
+
+          <article class="voice-row">
+            <div class="rank">2</div>
+            <div class="voice-main">
+              <div class="voice-head">
+                <span class="voice-name">Cavill</span>
+                <span class="tag male">Male voice</span>
+              </div>
+              <div class="metrics">
+                <span>Attractiveness 5.05</span>
+                <span>Human-likeness 4.41</span>
+                <span>Score 3.12</span>
+              </div>
+              <audio controls preload="metadata" src="Male_Cavill.mp3">
+                Your browser does not support the audio element.
+              </audio>
+              <a class="open-link" href="Male_Cavill.mp3" target="_blank" rel="noopener">Open audio file</a>
+            </div>
+          </article>
+
+          <article class="voice-row">
+            <div class="rank">3</div>
+            <div class="voice-main">
+              <div class="voice-head">
+                <span class="voice-name">Hallie</span>
+                <span class="tag female">Female voice</span>
+              </div>
+              <div class="metrics">
+                <span>Attractiveness 4.97</span>
+                <span>Human-likeness 3.90</span>
+                <span>Score 2.75</span>
+              </div>
+              <audio controls preload="metadata" src="Female_Hallie.mp3">
+                Your browser does not support the audio element.
+              </audio>
+              <a class="open-link" href="Female_Hallie.mp3" target="_blank" rel="noopener">Open audio file</a>
+            </div>
+          </article>
+
+          <article class="voice-row">
+            <div class="rank">4</div>
+            <div class="voice-main">
+              <div class="voice-head">
+                <span class="voice-name">Tyron</span>
+                <span class="tag male">Male voice</span>
+              </div>
+              <div class="metrics">
+                <span>Attractiveness 4.71</span>
+                <span>Human-likeness 4.68</span>
+                <span>Score 2.57</span>
+              </div>
+              <audio controls preload="metadata" src="Male_Tyron.mp3">
+                Your browser does not support the audio element.
+              </audio>
+              <a class="open-link" href="Male_Tyron.mp3" target="_blank" rel="noopener">Open audio file</a>
+            </div>
+          </article>
+
+          <article class="voice-row">
+            <div class="rank">5</div>
+            <div class="voice-main">
+              <div class="voice-head">
+                <span class="voice-name">Anne</span>
+                <span class="tag female">Female voice</span>
+              </div>
+              <div class="metrics">
+                <span>Attractiveness 4.50</span>
+                <span>Human-likeness 4.20</span>
+                <span>Score 1.26</span>
+              </div>
+              <audio controls preload="metadata" src="Female_Anne.mp3">
+                Your browser does not support the audio element.
+              </audio>
+              <a class="open-link" href="Female_Anne.mp3" target="_blank" rel="noopener">Open audio file</a>
+            </div>
+          </article>
+
+          <article class="voice-row">
+            <div class="rank">6</div>
+            <div class="voice-main">
+              <div class="voice-head">
+                <span class="voice-name">Eliel</span>
+                <span class="tag male">Male voice</span>
+              </div>
+              <div class="metrics">
+                <span>Attractiveness 4.44</span>
+                <span>Human-likeness 4.48</span>
+                <span>Score 1.12</span>
+              </div>
+              <audio controls preload="metadata" src="Male_Eliel.mp3">
+                Your browser does not support the audio element.
+              </audio>
+              <a class="open-link" href="Male_Eliel.mp3" target="_blank" rel="noopener">Open audio file</a>
+            </div>
+          </article>
+
+          <article class="voice-row">
+            <div class="rank">7</div>
+            <div class="voice-main">
+              <div class="voice-head">
+                <span class="voice-name">Mark</span>
+                <span class="tag male">Male voice</span>
+              </div>
+              <div class="metrics">
+                <span>Attractiveness 5.11</span>
+                <span>Human-likeness 3.69</span>
+                <span>Score 0.96</span>
+              </div>
+              <audio controls preload="metadata" src="Male_Mark.mp3">
+                Your browser does not support the audio element.
+              </audio>
+              <a class="open-link" href="Male_Mark.mp3" target="_blank" rel="noopener">Open audio file</a>
+            </div>
+          </article>
+
+          <article class="voice-row">
+            <div class="rank">8</div>
+            <div class="voice-main">
+              <div class="voice-head">
+                <span class="voice-name">Kara</span>
+                <span class="tag female">Female voice</span>
+              </div>
+              <div class="metrics">
+                <span>Attractiveness 4.31</span>
+                <span>Human-likeness 4.15</span>
+                <span>Score 0.72</span>
+              </div>
+              <audio controls preload="metadata" src="Female_Kara.mp3">
+                Your browser does not support the audio element.
+              </audio>
+              <a class="open-link" href="Female_Kara.mp3" target="_blank" rel="noopener">Open audio file</a>
+            </div>
+          </article>
+
+          <article class="voice-row">
+            <div class="rank">9</div>
+            <div class="voice-main">
+              <div class="voice-head">
+                <span class="voice-name">Serein</span>
+                <span class="tag female">Female voice</span>
+              </div>
+              <div class="metrics">
+                <span>Attractiveness 4.50</span>
+                <span>Human-likeness 4.62</span>
+                <span>Score 0.49</span>
+              </div>
+              <audio controls preload="metadata" src="Female_Serein.mp3">
+                Your browser does not support the audio element.
+              </audio>
+              <a class="open-link" href="Female_Serein.mp3" target="_blank" rel="noopener">Open audio file</a>
+            </div>
+          </article>
+
+          <article class="voice-row">
+            <div class="rank">10</div>
+            <div class="voice-main">
+              <div class="voice-head">
+                <span class="voice-name">Nate</span>
+                <span class="tag male">Male voice</span>
+              </div>
+              <div class="metrics">
+                <span>Attractiveness 4.57</span>
+                <span>Human-likeness 3.11</span>
+                <span>Score 0.29</span>
+              </div>
+              <audio controls preload="metadata" src="Male_Nate.mp3">
+                Your browser does not support the audio element.
+              </audio>
+              <a class="open-link" href="Male_Nate.mp3" target="_blank" rel="noopener">Open audio file</a>
+            </div>
+          </article>
+
+          <article class="voice-row">
+            <div class="rank">11</div>
+            <div class="voice-main">
+              <div class="voice-head">
+                <span class="voice-name">Hailey</span>
+                <span class="tag female">Female voice</span>
+              </div>
+              <div class="metrics">
+                <span>Attractiveness 4.78</span>
+                <span>Human-likeness 4.52</span>
+                <span>Score 0.25</span>
+              </div>
+              <audio controls preload="metadata" src="Female_Hailey.mp3">
+                Your browser does not support the audio element.
+              </audio>
+              <a class="open-link" href="Female_Hailey.mp3" target="_blank" rel="noopener">Open audio file</a>
+            </div>
+          </article>
+
+          <article class="voice-row">
+            <div class="rank">12</div>
+            <div class="voice-main">
+              <div class="voice-head">
+                <span class="voice-name">Olivia</span>
+                <span class="tag female">Female voice</span>
+              </div>
+              <div class="metrics">
+                <span>Attractiveness 4.22</span>
+                <span>Human-likeness 4.78</span>
+                <span>Score -0.43</span>
+              </div>
+              <audio controls preload="metadata" src="Female_Olivia.mp3">
+                Your browser does not support the audio element.
+              </audio>
+              <a class="open-link" href="Female_Olivia.mp3" target="_blank" rel="noopener">Open audio file</a>
+            </div>
+          </article>
+
+          <article class="voice-row">
+            <div class="rank">13</div>
+            <div class="voice-main">
+              <div class="voice-head">
+                <span class="voice-name">Lucas</span>
+                <span class="tag male">Male voice</span>
+              </div>
+              <div class="metrics">
+                <span>Attractiveness 4.45</span>
+                <span>Human-likeness 3.84</span>
+                <span>Score -0.49</span>
+              </div>
+              <audio controls preload="metadata" src="Male_Lucas.mp3">
+                Your browser does not support the audio element.
+              </audio>
+              <a class="open-link" href="Male_Lucas.mp3" target="_blank" rel="noopener">Open audio file</a>
+            </div>
+          </article>
+
+          <article class="voice-row">
+            <div class="rank">14</div>
+            <div class="voice-main">
+              <div class="voice-head">
+                <span class="voice-name">Ivanna</span>
+                <span class="tag female">Female voice</span>
+              </div>
+              <div class="metrics">
+                <span>Attractiveness 4.87</span>
+                <span>Human-likeness 3.57</span>
+                <span>Score -0.84</span>
+              </div>
+              <audio controls preload="metadata" src="Female_Ivanna.mp3">
+                Your browser does not support the audio element.
+              </audio>
+              <a class="open-link" href="Female_Ivanna.mp3" target="_blank" rel="noopener">Open audio file</a>
+            </div>
+          </article>
+
+          <article class="voice-row">
+            <div class="rank">15</div>
+            <div class="voice-main">
+              <div class="voice-head">
+                <span class="voice-name">Jenn</span>
+                <span class="tag female">Female voice</span>
+              </div>
+              <div class="metrics">
+                <span>Attractiveness 4.82</span>
+                <span>Human-likeness 3.37</span>
+                <span>Score -0.99</span>
+              </div>
+              <audio controls preload="metadata" src="Female_Jenn.mp3">
+                Your browser does not support the audio element.
+              </audio>
+              <a class="open-link" href="Female_Jenn.mp3" target="_blank" rel="noopener">Open audio file</a>
+            </div>
+          </article>
+
+          <article class="voice-row">
+            <div class="rank">16</div>
+            <div class="voice-main">
+              <div class="voice-head">
+                <span class="voice-name">Kristen</span>
+                <span class="tag female">Female voice</span>
+              </div>
+              <div class="metrics">
+                <span>Attractiveness 4.44</span>
+                <span>Human-likeness 4.72</span>
+                <span>Score -1.24</span>
+              </div>
+              <audio controls preload="metadata" src="Female_Kristen.mp3">
+                Your browser does not support the audio element.
+              </audio>
+              <a class="open-link" href="Female_Kristen.mp3" target="_blank" rel="noopener">Open audio file</a>
+            </div>
+          </article>
+
+          <article class="voice-row">
+            <div class="rank">17</div>
+            <div class="voice-main">
+              <div class="voice-head">
+                <span class="voice-name">Elias</span>
+                <span class="tag male">Male voice</span>
+              </div>
+              <div class="metrics">
+                <span>Attractiveness 3.73</span>
+                <span>Human-likeness 4.50</span>
+                <span>Score -1.54</span>
+              </div>
+              <audio controls preload="metadata" src="Male_Elias.mp3">
+                Your browser does not support the audio element.
+              </audio>
+              <a class="open-link" href="Male_Elias.mp3" target="_blank" rel="noopener">Open audio file</a>
+            </div>
+          </article>
+
+          <article class="voice-row">
+            <div class="rank">18</div>
+            <div class="voice-main">
+              <div class="voice-head">
+                <span class="voice-name">Jon</span>
+                <span class="tag male">Male voice</span>
+              </div>
+              <div class="metrics">
+                <span>Attractiveness 4.82</span>
+                <span>Human-likeness 2.96</span>
+                <span>Score -1.68</span>
+              </div>
+              <audio controls preload="metadata" src="Male_Jon.mp3">
+                Your browser does not support the audio element.
+              </audio>
+              <a class="open-link" href="Male_Jon.mp3" target="_blank" rel="noopener">Open audio file</a>
+            </div>
+          </article>
+
+          <article class="voice-row">
+            <div class="rank">19</div>
+            <div class="voice-main">
+              <div class="voice-head">
+                <span class="voice-name">Laomedeia(GCP)</span>
+                <span class="tag female">Female voice</span>
+              </div>
+              <div class="metrics">
+                <span>Attractiveness 4.12</span>
+                <span>Human-likeness 3.30</span>
+                <span>Score -1.72</span>
+              </div>
+              <audio controls preload="metadata" src="Female_Laomedeia(GCP).mp3">
+                Your browser does not support the audio element.
+              </audio>
+              <a class="open-link" href="Female_Laomedeia(GCP).mp3" target="_blank" rel="noopener">Open audio file</a>
+            </div>
+          </article>
+
+          <article class="voice-row">
+            <div class="rank">20</div>
+            <div class="voice-main">
+              <div class="voice-head">
+                <span class="voice-name">James</span>
+                <span class="tag male">Male voice</span>
+              </div>
+              <div class="metrics">
+                <span>Attractiveness 4.24</span>
+                <span>Human-likeness 4.24</span>
+                <span>Score -1.97</span>
+              </div>
+              <audio controls preload="metadata" src="Male_James.mp3">
+                Your browser does not support the audio element.
+              </audio>
+              <a class="open-link" href="Male_James.mp3" target="_blank" rel="noopener">Open audio file</a>
+            </div>
+          </article>
+
+          <article class="voice-row">
+            <div class="rank">21</div>
+            <div class="voice-main">
+              <div class="voice-head">
+                <span class="voice-name">Algenib(GCP)</span>
+                <span class="tag male">Male voice</span>
+              </div>
+              <div class="metrics">
+                <span>Attractiveness 4.56</span>
+                <span>Human-likeness 2.72</span>
+                <span>Score -2.36</span>
+              </div>
+              <audio controls preload="metadata" src="Male_Algenib(GCP).mp3">
+                Your browser does not support the audio element.
+              </audio>
+              <a class="open-link" href="Male_Algenib(GCP).mp3" target="_blank" rel="noopener">Open audio file</a>
+            </div>
+          </article>
+
+          <article class="voice-row">
+            <div class="rank">22</div>
+            <div class="voice-main">
+              <div class="voice-head">
+                <span class="voice-name">Eve</span>
+                <span class="tag female">Female voice</span>
+              </div>
+              <div class="metrics">
+                <span>Attractiveness 3.53</span>
+                <span>Human-likeness 3.97</span>
+                <span>Score -3.89</span>
+              </div>
+              <audio controls preload="metadata" src="Female_Eve.mp3">
+                Your browser does not support the audio element.
+              </audio>
+              <a class="open-link" href="Female_Eve.mp3" target="_blank" rel="noopener">Open audio file</a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <p class="note">
+      Upload this HTML file together with all MP3 files in the same GitHub repository folder.
+    </p>
+  </main>
+
+  <script>
+    // Pause other players when a new voice starts playing.
+    document.querySelectorAll("audio").forEach((audio) => {
+      audio.addEventListener("play", () => {
+        document.querySelectorAll("audio").forEach((other) => {
+          if (other !== audio) {
+            other.pause();
+          }
+        });
+      });
+    });
+  </script>
+</body>
+</html>
