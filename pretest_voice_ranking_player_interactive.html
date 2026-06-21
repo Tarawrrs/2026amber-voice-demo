@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Voice Pretest Ranking Player</title>
+
+  <style>
+    :root {
+      --teal: #00635d;
+      --teal-dark: #004f4a;
+      --teal-soft: #edf7f6;
+      --text: #222222;
+      --muted: #666666;
+      --border: #d8e5e4;
+      --female: #c73b6f;
+      --male: #2b5fb8;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: #ffffff;
+      color: var(--text);
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 18px;
+      line-height: 1.45;
+    }
+
+    .header {
+      background: var(--teal);
+      color: #ffffff;
+      padding: 1.05rem 1.55rem 0.95rem;
+      font-size: clamp(1.35rem, 2.1vw, 2rem);
+      font-weight: 700;
+    }
+
+    .content {
+      max-width: 1180px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 2.2rem 4vw 2.8rem;
+    }
+
+    .caption {
+      margin: 0 0 1.2rem;
+      text-align: center;
+      font-size: clamp(1rem, 1.2vw, 1.15rem);
+    }
+
+    .controls {
+      display: flex;
+      justify-content: center;
+      gap: 0.7rem;
+      flex-wrap: wrap;
+      margin: 0 0 1.8rem;
+    }
+
+    .sort-button {
+      border: 1.6px solid var(--teal);
+      border-radius: 999px;
+      background: #ffffff;
+      color: var(--teal-dark);
+      padding: 0.5rem 1rem;
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 0.96rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .sort-button:hover,
+    .sort-button:focus {
+      background: var(--teal-soft);
+      outline: none;
+    }
+
+    .sort-button.active {
+      background: var(--teal);
+      color: #ffffff;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(320px, 1fr));
+      gap: 1.45rem;
+      align-items: start;
+    }
+
+    .panel {
+      border: 1.5px solid var(--border);
+      border-radius: 14px;
+      background: #ffffff;
+      overflow: hidden;
+      box-shadow: 0 4px 14px rgba(0, 60, 55, 0.055);
+    }
+
+    .panel-title {
+      background: var(--teal-soft);
+      border-bottom: 1px solid var(--border);
+      padding: 0.85rem 1rem;
+      color: var(--teal-dark);
+      font-size: clamp(1.05rem, 1.4vw, 1.32rem);
+      font-weight: 700;
+    }
+
+    .panel-subtitle {
+      display: block;
+      margin-top: 0.12rem;
+      color: var(--muted);
+      font-size: 0.82rem;
+      font-weight: 400;
+    }
+
+    .voice-list {
+      padding: 0.35rem 0.8rem 0.75rem;
+    }
+
+    .voice-row {
+      display: grid;
+      grid-template-columns: 2.15rem minmax(0, 1fr);
+      gap: 0.65rem;
+      padding: 0.75rem 0.05rem;
+      border-bottom: 1px solid #edf2f3;
+    }
+
+    .voice-row:last-child {
+      border-bottom: none;
+    }
+
+    .rank {
+      width: 1.9rem;
+      height: 1.9rem;
+      border-radius: 999px;
+      background: var(--teal);
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.84rem;
+      font-weight: 700;
+      margin-top: 0.07rem;
+    }
+
+    .voice-main {
+      min-width: 0;
+    }
+
+    .voice-head {
+      display: flex;
+      align-items: baseline;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin-bottom: 0.18rem;
+    }
+
+    .voice-name {
+      color: var(--teal-dark);
+      font-size: 1.03rem;
+      font-weight: 700;
+    }
+
+    .tag {
+      border-radius: 999px;
+      padding: 0.08rem 0.5rem;
+      color: #ffffff;
+      font-size: 0.7rem;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .tag.Female {
+      background: var(--female);
+    }
+
+    .tag.Male {
+      background: var(--male);
+    }
+
+    .metrics {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.38rem 0.75rem;
+      color: var(--muted);
+      font-size: 0.76rem;
+      margin-bottom: 0.38rem;
+    }
+
+    .metric.active-metric {
+      color: var(--teal-dark);
+      font-weight: 700;
+    }
+
+    audio {
+      display: block;
+      width: 100%;
+      max-width: 450px;
+      height: 34px;
+      accent-color: var(--teal);
+    }
+
+    .open-link {
+      display: inline-block;
+      margin-top: 0.28rem;
+      color: var(--teal-dark);
+      font-size: 0.75rem;
+      text-decoration: none;
+      border-bottom: 1px solid transparent;
+    }
+
+    .open-link:hover,
+    .open-link:focus {
+      border-bottom-color: var(--teal-dark);
+      outline: none;
+    }
+
+    .note {
+      margin: 1.5rem 0 0;
+      color: var(--muted);
+      font-size: 0.86rem;
+      text-align: center;
+    }
+
+    @media (max-width: 850px) {
+      body {
+        font-size: 16px;
+      }
+
+      .grid {
+        grid-template-columns: 1fr;
+      }
+
+      .content {
+        padding: 1.6rem 1rem 2.2rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header class="header">Voice Evaluation Pretest: Audio Ranking</header>
+
+  <main class="content">
+    <p class="caption">
+      Choose a ranking criterion, then click a player to hear the corresponding AI voice.
+    </p>
+
+    <div class="controls" aria-label="Ranking controls">
+      <button class="sort-button active" data-metric="score">Total score</button>
+      <button class="sort-button" data-metric="att">Attractiveness</button>
+      <button class="sort-button" data-metric="hum">Human-likeness</button>
+    </div>
+
+    <section class="grid">
+      <div class="panel">
+        <div class="panel-title">
+          Male participants’ ranking
+          <span class="panel-subtitle">Voice evaluations from male raters</span>
+        </div>
+        <div class="voice-list" id="male-list"></div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-title">
+          Female participants’ ranking
+          <span class="panel-subtitle">Voice evaluations from female raters</span>
+        </div>
+        <div class="voice-list" id="female-list"></div>
+      </div>
+    </section>
+
+    <p class="note">
+      Upload this HTML file together with all MP3 files in the same GitHub repository folder.
+    </p>
+  </main>
+
+  <script>
+    const DATA = {
+      "maleRaters": [
+            {
+                  "name": "Kristen",
+                  "gender": "Female",
+                  "att": 4.914285659790039,
+                  "hum": 4.857142925262451,
+                  "score": 3.70271372795105,
+                  "file": "Female_Kristen.mp3",
+                  "url": "Female_Kristen.mp3"
+            },
+            {
+                  "name": "Olivia",
+                  "gender": "Female",
+                  "att": 4.69444465637207,
+                  "hum": 4.861111164093018,
+                  "score": 3.6869635581970215,
+                  "file": "Female_Olivia.mp3",
+                  "url": "Female_Olivia.mp3"
+            },
+            {
+                  "name": "Ivanna",
+                  "gender": "Female",
+                  "att": 5.142857074737549,
+                  "hum": 4.114285945892334,
+                  "score": 2.3997673988342285,
+                  "file": "Female_Ivanna.mp3",
+                  "url": "Female_Ivanna.mp3"
+            },
+            {
+                  "name": "Serein",
+                  "gender": "Female",
+                  "att": 4.5,
+                  "hum": 4.307692527770996,
+                  "score": 1.7062156200408936,
+                  "file": "Female_Serein.mp3",
+                  "url": "Female_Serein.mp3"
+            },
+            {
+                  "name": "Hallie",
+                  "gender": "Female",
+                  "att": 5.0,
+                  "hum": 4.111111164093018,
+                  "score": 1.5672255754470825,
+                  "file": "Female_Hallie.mp3",
+                  "url": "Female_Hallie.mp3"
+            },
+            {
+                  "name": "Lucas",
+                  "gender": "Male",
+                  "att": 4.07692289352417,
+                  "hum": 4.692307472229004,
+                  "score": 1.176312804222107,
+                  "file": "Male_Lucas.mp3",
+                  "url": "Male_Lucas.mp3"
+            },
+            {
+                  "name": "Hailey",
+                  "gender": "Female",
+                  "att": 4.846153736114502,
+                  "hum": 5.0,
+                  "score": 1.140069842338562,
+                  "file": "Female_Hailey.mp3",
+                  "url": "Female_Hailey.mp3"
+            },
+            {
+                  "name": "Anne",
+                  "gender": "Female",
+                  "att": 4.814815044403076,
+                  "hum": 4.111111164093018,
+                  "score": 0.8143086433410645,
+                  "file": "Female_Anne.mp3",
+                  "url": "Female_Anne.mp3"
+            },
+            {
+                  "name": "Tyron",
+                  "gender": "Male",
+                  "att": 3.828571319580078,
+                  "hum": 4.485714435577393,
+                  "score": 0.781413197517395,
+                  "file": "Male_Tyron.mp3",
+                  "url": "Male_Tyron.mp3"
+            },
+            {
+                  "name": "Kara",
+                  "gender": "Female",
+                  "att": 4.346153736114502,
+                  "hum": 4.346153736114502,
+                  "score": 0.6290165185928345,
+                  "file": "Female_Kara.mp3",
+                  "url": "Female_Kara.mp3"
+            },
+            {
+                  "name": "Eliel",
+                  "gender": "Male",
+                  "att": 3.7931034564971924,
+                  "hum": 4.586206912994385,
+                  "score": 0.3293798565864563,
+                  "file": "Male_Eliel.mp3",
+                  "url": "Male_Eliel.mp3"
+            },
+            {
+                  "name": "Jenn",
+                  "gender": "Female",
+                  "att": 4.972972869873047,
+                  "hum": 3.1621620655059814,
+                  "score": -0.0499599426984787,
+                  "file": "Female_Jenn.mp3",
+                  "url": "Female_Jenn.mp3"
+            },
+            {
+                  "name": "Cavill",
+                  "gender": "Male",
+                  "att": 4.333333492279053,
+                  "hum": 4.066666603088379,
+                  "score": -0.05940425395965576,
+                  "file": "Male_Cavill.mp3",
+                  "url": "Male_Cavill.mp3"
+            },
+            {
+                  "name": "Nate",
+                  "gender": "Male",
+                  "att": 4.15625,
+                  "hum": 3.6875,
+                  "score": -0.2077268809080124,
+                  "file": "Male_Nate.mp3",
+                  "url": "Male_Nate.mp3"
+            },
+            {
+                  "name": "Elias",
+                  "gender": "Male",
+                  "att": 3.2162163257598877,
+                  "hum": 4.783783912658691,
+                  "score": -0.3154950737953186,
+                  "file": "Male_Elias.mp3",
+                  "url": "Male_Elias.mp3"
+            },
+            {
+                  "name": "Attank",
+                  "gender": "Male",
+                  "att": 3.7200000286102295,
+                  "hum": 4.880000114440918,
+                  "score": -1.020775318145752,
+                  "file": "Male_Attank.mp3",
+                  "url": "Male_Attank.mp3"
+            },
+            {
+                  "name": "Jon",
+                  "gender": "Male",
+                  "att": 4.55555534362793,
+                  "hum": 3.1111111640930176,
+                  "score": -1.1920993328094482,
+                  "file": "Male_Jon.mp3",
+                  "url": "Male_Jon.mp3"
+            },
+            {
+                  "name": "Mark",
+                  "gender": "Male",
+                  "att": 4.333333492279053,
+                  "hum": 3.3333332538604736,
+                  "score": -1.8351002931594849,
+                  "file": "Male_Mark.mp3",
+                  "url": "Male_Mark.mp3"
+            },
+            {
+                  "name": "James",
+                  "gender": "Male",
+                  "att": 3.700000047683716,
+                  "hum": 3.9000000953674316,
+                  "score": -2.5125885009765625,
+                  "file": "Male_James.mp3",
+                  "url": "Male_James.mp3"
+            },
+            {
+                  "name": "Algenib(GCP)",
+                  "gender": "Male",
+                  "att": 3.6875,
+                  "hum": 2.5625,
+                  "score": -3.407058000564575,
+                  "file": "Male_Algenib(GCP).mp3",
+                  "url": "Male_Algenib(GCP).mp3"
+            },
+            {
+                  "name": "Laomedeia(GCP)",
+                  "gender": "Female",
+                  "att": 3.774193525314331,
+                  "hum": 2.322580575942993,
+                  "score": -3.435762882232666,
+                  "file": "Female_Laomedeia(GCP).mp3",
+                  "url": "Female_Laomedeia(GCP).mp3"
+            },
+            {
+                  "name": "Eve",
+                  "gender": "Female",
+                  "att": 3.4242424964904785,
+                  "hum": 3.696969747543335,
+                  "score": -3.897416353225708,
+                  "file": "Female_Eve.mp3",
+                  "url": "Female_Eve.mp3"
+            }
+      ],
+      "femaleRaters": [
+            {
+                  "name": "Attank",
+                  "gender": "Male",
+                  "att": 4.6785712242126465,
+                  "hum": 5.142857074737549,
+                  "score": 3.6292223930358887,
+                  "file": "Male_Attank.mp3",
+                  "url": "Male_Attank.mp3"
+            },
+            {
+                  "name": "Cavill",
+                  "gender": "Male",
+                  "att": 5.045454502105713,
+                  "hum": 4.409090995788574,
+                  "score": 3.1208620071411133,
+                  "file": "Male_Cavill.mp3",
+                  "url": "Male_Cavill.mp3"
+            },
+            {
+                  "name": "Hallie",
+                  "gender": "Female",
+                  "att": 4.9666666984558105,
+                  "hum": 3.9000000953674316,
+                  "score": 2.7463183403015137,
+                  "file": "Female_Hallie.mp3",
+                  "url": "Female_Hallie.mp3"
+            },
+            {
+                  "name": "Tyron",
+                  "gender": "Male",
+                  "att": 4.709677219390869,
+                  "hum": 4.677419185638428,
+                  "score": 2.5656163692474365,
+                  "file": "Male_Tyron.mp3",
+                  "url": "Male_Tyron.mp3"
+            },
+            {
+                  "name": "Anne",
+                  "gender": "Female",
+                  "att": 4.5,
+                  "hum": 4.199999809265137,
+                  "score": 1.2634891271591187,
+                  "file": "Female_Anne.mp3",
+                  "url": "Female_Anne.mp3"
+            },
+            {
+                  "name": "Eliel",
+                  "gender": "Male",
+                  "att": 4.440000057220459,
+                  "hum": 4.480000019073486,
+                  "score": 1.1168838739395142,
+                  "file": "Male_Eliel.mp3",
+                  "url": "Male_Eliel.mp3"
+            },
+            {
+                  "name": "Mark",
+                  "gender": "Male",
+                  "att": 5.114285945892334,
+                  "hum": 3.6857142448425293,
+                  "score": 0.9562823176383972,
+                  "file": "Male_Mark.mp3",
+                  "url": "Male_Mark.mp3"
+            },
+            {
+                  "name": "Kara",
+                  "gender": "Female",
+                  "att": 4.307692527770996,
+                  "hum": 4.153846263885498,
+                  "score": 0.7163743376731873,
+                  "file": "Female_Kara.mp3",
+                  "url": "Female_Kara.mp3"
+            },
+            {
+                  "name": "Serein",
+                  "gender": "Female",
+                  "att": 4.5,
+                  "hum": 4.625,
+                  "score": 0.48959705233573914,
+                  "file": "Female_Serein.mp3",
+                  "url": "Female_Serein.mp3"
+            },
+            {
+                  "name": "Nate",
+                  "gender": "Male",
+                  "att": 4.5714287757873535,
+                  "hum": 3.107142925262451,
+                  "score": 0.2886514961719513,
+                  "file": "Male_Nate.mp3",
+                  "url": "Male_Nate.mp3"
+            },
+            {
+                  "name": "Hailey",
+                  "gender": "Female",
+                  "att": 4.782608509063721,
+                  "hum": 4.5217390060424805,
+                  "score": 0.25256794691085815,
+                  "file": "Female_Hailey.mp3",
+                  "url": "Female_Hailey.mp3"
+            },
+            {
+                  "name": "Olivia",
+                  "gender": "Female",
+                  "att": 4.217391490936279,
+                  "hum": 4.782608509063721,
+                  "score": -0.4326103925704956,
+                  "file": "Female_Olivia.mp3",
+                  "url": "Female_Olivia.mp3"
+            },
+            {
+                  "name": "Lucas",
+                  "gender": "Male",
+                  "att": 4.451612949371338,
+                  "hum": 3.838709592819214,
+                  "score": -0.49250465631484985,
+                  "file": "Male_Lucas.mp3",
+                  "url": "Male_Lucas.mp3"
+            },
+            {
+                  "name": "Ivanna",
+                  "gender": "Female",
+                  "att": 4.869565010070801,
+                  "hum": 3.5652174949645996,
+                  "score": -0.8359366655349731,
+                  "file": "Female_Ivanna.mp3",
+                  "url": "Female_Ivanna.mp3"
+            },
+            {
+                  "name": "Jenn",
+                  "gender": "Female",
+                  "att": 4.815789699554443,
+                  "hum": 3.3684210777282715,
+                  "score": -0.9860714673995972,
+                  "file": "Female_Jenn.mp3",
+                  "url": "Female_Jenn.mp3"
+            },
+            {
+                  "name": "Kristen",
+                  "gender": "Female",
+                  "att": 4.4375,
+                  "hum": 4.71875,
+                  "score": -1.238470196723938,
+                  "file": "Female_Kristen.mp3",
+                  "url": "Female_Kristen.mp3"
+            },
+            {
+                  "name": "Elias",
+                  "gender": "Male",
+                  "att": 3.730769157409668,
+                  "hum": 4.5,
+                  "score": -1.5431816577911377,
+                  "file": "Male_Elias.mp3",
+                  "url": "Male_Elias.mp3"
+            },
+            {
+                  "name": "Jon",
+                  "gender": "Male",
+                  "att": 4.8214287757873535,
+                  "hum": 2.9642856121063232,
+                  "score": -1.6755051612854004,
+                  "file": "Male_Jon.mp3",
+                  "url": "Male_Jon.mp3"
+            },
+            {
+                  "name": "Laomedeia(GCP)",
+                  "gender": "Female",
+                  "att": 4.116279125213623,
+                  "hum": 3.302325487136841,
+                  "score": -1.718625545501709,
+                  "file": "Female_Laomedeia(GCP).mp3",
+                  "url": "Female_Laomedeia(GCP).mp3"
+            },
+            {
+                  "name": "James",
+                  "gender": "Male",
+                  "att": 4.242424011230469,
+                  "hum": 4.242424011230469,
+                  "score": -1.97335684299469,
+                  "file": "Male_James.mp3",
+                  "url": "Male_James.mp3"
+            },
+            {
+                  "name": "Algenib(GCP)",
+                  "gender": "Male",
+                  "att": 4.559999942779541,
+                  "hum": 2.7200000286102295,
+                  "score": -2.3641321659088135,
+                  "file": "Male_Algenib(GCP).mp3",
+                  "url": "Male_Algenib(GCP).mp3"
+            },
+            {
+                  "name": "Eve",
+                  "gender": "Female",
+                  "att": 3.5333333015441895,
+                  "hum": 3.9666666984558105,
+                  "score": -3.8854706287384033,
+                  "file": "Female_Eve.mp3",
+                  "url": "Female_Eve.mp3"
+            }
+      ]
+};
+    let currentMetric = "score";
+
+    function metricLabel(metric) {
+      if (metric === "score") return "Score";
+      if (metric === "att") return "Attractiveness";
+      if (metric === "hum") return "Human-likeness";
+      return metric;
+    }
+
+    function renderList(containerId, rows) {
+      const container = document.getElementById(containerId);
+      const sorted = [...rows].sort((a, b) => {
+        const diff = b[currentMetric] - a[currentMetric];
+        if (Math.abs(diff) > 0.0001) return diff;
+        return b.score - a.score;
+      });
+
+      container.innerHTML = sorted.map((row, index) => {
+        const genderClass = row.gender === "Female" ? "Female" : "Male";
+        return `
+          <article class="voice-row">
+            <div class="rank">${index + 1}</div>
+            <div class="voice-main">
+              <div class="voice-head">
+                <span class="voice-name">${row.name}</span>
+                <span class="tag ${genderClass}">${row.gender} voice</span>
+              </div>
+              <div class="metrics">
+                <span class="metric ${currentMetric === "score" ? "active-metric" : ""}">Score ${row.score.toFixed(2)}</span>
+                <span class="metric ${currentMetric === "att" ? "active-metric" : ""}">Attractiveness ${row.att.toFixed(2)}</span>
+                <span class="metric ${currentMetric === "hum" ? "active-metric" : ""}">Human-likeness ${row.hum.toFixed(2)}</span>
+              </div>
+              <audio controls preload="metadata" src="${row.url}">
+                Your browser does not support the audio element.
+              </audio>
+              <a class="open-link" href="${row.url}" target="_blank" rel="noopener">Open audio file</a>
+            </div>
+          </article>
+        `;
+      }).join("");
+
+      attachAudioBehavior();
+    }
+
+    function attachAudioBehavior() {
+      document.querySelectorAll("audio").forEach((audio) => {
+        audio.addEventListener("play", () => {
+          document.querySelectorAll("audio").forEach((other) => {
+            if (other !== audio) other.pause();
+          });
+        });
+      });
+    }
+
+    function renderAll() {
+      renderList("male-list", DATA.maleRaters);
+      renderList("female-list", DATA.femaleRaters);
+    }
+
+    document.querySelectorAll(".sort-button").forEach((button) => {
+      button.addEventListener("click", () => {
+        currentMetric = button.dataset.metric;
+        document.querySelectorAll(".sort-button").forEach((b) => b.classList.remove("active"));
+        button.classList.add("active");
+        renderAll();
+      });
+    });
+
+    renderAll();
+  </script>
+</body>
+</html>
